@@ -1,6 +1,20 @@
-import { initLogging, logger } from "./utils";
+import { initLogging, logger } from "./helpers";
+import {
+  initMongo,
+  initZookeeperConnection,
+  createZNode,
+  getPartition,
+} from "./infrastructure";
 
-function main() {
+async function main() {
   initLogging();
-  logger.info("Hello World!");
+  initMongo();
+  initZookeeperConnection();
+  await createZNode();
+  await getPartition();
+  setInterval(getPartition, 10000);
 }
+
+main().catch((err) => {
+  logger.error("An error occurred:", err);
+});
