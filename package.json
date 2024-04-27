@@ -1,0 +1,26 @@
+{
+  "name": "zookeeper-distributed-locking-node",
+  "version": "1.0.0",
+  "description": "Workload Partitioning with Apache Zookeeper &amp; Node.js microservices running on Docker Container",
+  "exports": "./app/index.js",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kripu77/zookeeper-distributed-locking-node.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kripu77/zookeeper-distributed-locking-node.js/issues"
+  },
+  "homepage": "https://github.com/Kripu77/zookeeper-distributed-locking-node.js#readme",
+  "dependencies": {
+    "mongodb": "^6.5.0",
+    "node-zookeeper-client": "^1.1.3"
+  }
+}

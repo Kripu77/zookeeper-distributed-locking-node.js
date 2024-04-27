@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+  zookeeper:
+   image: zookeeper:latest
+   container_name: zookeeper
+   ports:
+     - 2181:2181
+     - 8081:8080
+               
+  microservice:     
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    deploy:
+      replicas: 2
+      endpoint_mode: dnsrr
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 512M
+    restart: always
+    environment:
+    ports:
+      - 3000-3010:3000
