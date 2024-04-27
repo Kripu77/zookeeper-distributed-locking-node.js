@@ -11,7 +11,7 @@ export async function initMongo() {
   await mongoClient.connect();
 }
 
-export async function getAllDouments(): Promise<any[]> {
+export async function getAllDocuments(): Promise<any[]> {
   try {
     const recordsCollection = mongoClient.db().collection<any>(collection);
 
