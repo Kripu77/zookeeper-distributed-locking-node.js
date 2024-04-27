@@ -11,11 +11,32 @@ export async function initMongo() {
   await mongoClient.connect();
 }
 
-export async function getAllDocuments(): Promise<any[]> {
+export async function getTotalDocumentsCount() {
+  try {
+    const recordsCollection = mongoClient.db().collection<any>(collection);
+    recordsCollection.countDocuments();
+  } catch (err) {
+    logger.error({
+      error:
+        "Failed to retrieve the total count of documents available in the collection.....",
+      errorMessage: err.message,
+    });
+    throw new Error(err.message);
+  }
+}
+
+export async function getDocumentsBasedOnPartition(
+  startIndex: number,
+  endIndex: number
+): Promise<any[]> {
   try {
     const recordsCollection = mongoClient.db().collection<any>(collection);
 
-    const docs = await recordsCollection.find({}).toArray();
+    const docs = await recordsCollection
+      .find()
+      .skip(startIndex)
+      .limit(endIndex - startIndex + 1)
+      .toArray();
 
     return docs;
   } catch (err: any) {
