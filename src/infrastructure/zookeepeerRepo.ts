@@ -12,7 +12,7 @@ type Client = typeof client;
 let instanceId: number;
 let runningInstanceId: number;
 let totalInstances: number;
-let count = 999;
+let count = 2;
 
 const root = "/microservices";
 const path = `${root}/workload-`;
