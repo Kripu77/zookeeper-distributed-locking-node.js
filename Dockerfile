@@ -8,6 +8,7 @@ COPY tsconfig.json /usr/src/
 WORKDIR /usr/src
 
 RUN npm ci --ignore-scripts
+RUN npm install typescript
 RUN npm run build
 
 WORKDIR /usr/src/app
@@ -24,7 +25,7 @@ FROM node:20.1.0 AS runner
 
 COPY --from=builder /usr/src/app /app
 
-USER nonroot
+USER 1001
 
 WORKDIR /app
 
