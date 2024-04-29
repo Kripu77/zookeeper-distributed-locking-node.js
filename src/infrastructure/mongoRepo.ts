@@ -4,17 +4,18 @@ import { MongoClient } from "mongodb";
 let mongoClient: MongoClient;
 
 const connectionString = "mongodb://root:root@mongo:27017";
-const collection = "collection";
+const db = "sample_db";
+const collection = "sample_collection";
 
 export async function initMongo() {
   mongoClient = new MongoClient(connectionString);
   await mongoClient.connect();
 }
 
-export async function getTotalDocumentsCount() {
+export async function getTotalDocumentsCount(): Promise<any> {
   try {
-    const recordsCollection = mongoClient.db().collection<any>(collection);
-    recordsCollection.countDocuments();
+    const recordsCollection = mongoClient.db(db).collection<any>(collection);
+    return recordsCollection.countDocuments();
   } catch (err) {
     logger.error({
       error:
@@ -30,7 +31,7 @@ export async function getDocumentsBasedOnPartition(
   endIndex: number
 ): Promise<any[]> {
   try {
-    const recordsCollection = mongoClient.db().collection<any>(collection);
+    const recordsCollection = mongoClient.db(db).collection<any>(collection);
 
     const docs = await recordsCollection
       .find()
