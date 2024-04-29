@@ -4,6 +4,7 @@ import {
   initZookeeperConnection,
   createZNode,
   getPartition,
+  getDocumentsBasedOnPartition,
 } from "./infrastructure";
 
 async function main() {
@@ -12,7 +13,18 @@ async function main() {
   initZookeeperConnection();
   await createZNode();
   await getPartition();
-  setInterval(getPartition, 10000);
+
+  setInterval(async () => {
+    const partition = await getPartition();
+    const docs = await getDocumentsBasedOnPartition(
+      partition.startIndex,
+      partition.endIndex
+    );
+
+    logger.info({
+      docs: docs,
+    });
+  }, 10000);
 }
 
 main().catch((err) => {
