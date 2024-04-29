@@ -1,5 +1,6 @@
 import { logger } from "@/helpers";
 import zookeeper from "node-zookeeper-client";
+import { getTotalDocumentsCount } from "./mongoRepo";
 
 const client = zookeeper.createClient("zookeeper:2181", {
   sessionTimeout: 5000,
@@ -73,6 +74,10 @@ export function checkState() {
 
 export async function getPartition() {
   await getChildren(client, root);
+  const count = await getTotalDocumentsCount();
+  console.log("here is the count", count);
+  if (count < 1) return;
+
   const partitionSize = Math.floor(count / totalInstances);
   const remainder = count % totalInstances;
   let startIndex = (runningInstanceId - 1) * partitionSize;
