@@ -5,7 +5,7 @@ import { getTotalDocumentsCount } from "./mongoRepo";
 const client = zookeeper.createClient("zookeeper:2181", {
   sessionTimeout: 5000,
   spinDelay: 1000,
-  retries: 0,
+  retries: 3,
 });
 
 type Client = typeof client;
@@ -13,7 +13,6 @@ type Client = typeof client;
 let instanceId: number;
 let runningInstanceId: number;
 let totalInstances: number;
-let count = 2;
 
 const root = "/microservices";
 const path = `${root}/workload-`;
@@ -61,11 +60,12 @@ export async function createChildNode() {
 }
 
 export function checkState() {
-  client.on("state", (state) => {
+  return client.on("state", (state) => {
     logger.info(state);
     if (state === zookeeper.State.SYNC_CONNECTED) {
       logger.info("Client state is changed to connected.");
     }
+
     if (state === zookeeper.State.EXPIRED) {
       logger.info("Client state expired");
     }
@@ -96,20 +96,28 @@ export async function getPartition() {
 
 export async function getChildren(client: Client, path: string) {
   return new Promise<void>((resolve, reject) => {
-    client.getChildren(path, (error, children) => {
-      if (error) {
-        logger.error(`Failed to list children of ${path} due to: ${error}`);
-        reject(error);
-      } else {
-        totalInstances = children.length;
-        children.forEach((child, index) => {
-          const childId = parseInt(child.split("-")[1], 10);
-          if (childId === instanceId) {
-            runningInstanceId = index + 1;
-          }
-        });
-        resolve();
+    client.getChildren(
+      path,
+      (event: any) => {
+        logger.info({ message: "Received event: %s", event: event });
+
+        // getChildren(client, path); -> Not necessary if the service runs on a cron job
+      },
+      (error, children) => {
+        if (error) {
+          logger.error(`Failed to list children of ${path} due to: ${error}`);
+          reject(error);
+        } else {
+          totalInstances = children.length;
+          children.forEach((child, index) => {
+            const childId = parseInt(child.split("-")[1], 10);
+            if (childId === instanceId) {
+              runningInstanceId = index + 1;
+            }
+          });
+          resolve();
+        }
       }
-    });
+    );
   });
 }
