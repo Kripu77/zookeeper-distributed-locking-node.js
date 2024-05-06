@@ -75,7 +75,7 @@ export function checkState() {
 export async function getPartition() {
   await getChildren(client, root);
   const count = await getTotalDocumentsCount();
-  console.log("here is the count", count);
+
   if (count < 1) return;
 
   const partitionSize = Math.floor(count / totalInstances);
