@@ -1,5 +1,4 @@
 import { initLogging, logger } from "./helpers";
-import { checkState } from "./infrastructure/zookeepeerRepo";
 import {
   initMongo,
   initZookeeperConnection,
@@ -7,27 +6,14 @@ import {
   getPartition,
   getDocumentsBasedOnPartition,
 } from "./infrastructure";
+import { setupBatchJob } from "./useCase/initBatchJob";
 
 async function main() {
   initLogging();
   initMongo();
   initZookeeperConnection();
   await createZNode();
-
-
-  setInterval(async()=>{
-    const partition = await getPartition();
-    const docs = await getDocumentsBasedOnPartition(
-      partition.startIndex,
-      partition.endIndex
-    );
-    logger.info({
-      docs: docs,
-    });
-  }, 10000)
-
-
- 
+  await setupBatchJob(getPartition, getDocumentsBasedOnPartition);
 }
 
 main().catch((err) => {
