@@ -1,6 +1,7 @@
 import { logger } from "@/helpers";
 import zookeeper, { Event } from "node-zookeeper-client";
 import { getTotalDocumentsCount } from "./mongoRepo";
+import { Partition } from "../models";
 
 const client = zookeeper.createClient("zookeeper:2181", {
   sessionTimeout: 9000,
@@ -72,7 +73,7 @@ export function checkState() {
   });
 }
 
-export async function getPartition() {
+export async function getPartition(): Promise<Partition> {
   await getChildren(client, root);
   const count = await getTotalDocumentsCount();
 

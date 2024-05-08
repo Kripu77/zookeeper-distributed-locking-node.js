@@ -1,15 +1,13 @@
 import { logger } from "@/helpers";
+import { GetDocumentsBasedOnPartition, GetPartition } from "@/models";
 import cron from "node-cron";
 
 const cronExpression = "*/10 * * * * *";
 
-interface Partition {
-  startIndex: number;
-  endIndex: number;
-}
-type GetPartition = () => Promise<Partition>;
-
-async function Job(getPartition: any, getDocumentsBasedOnPartition: any) {
+async function Job(
+  getPartition: GetPartition,
+  getDocumentsBasedOnPartition: GetDocumentsBasedOnPartition
+): Promise<void> {
   const partition = await getPartition();
   const docs = await getDocumentsBasedOnPartition(
     partition.startIndex,
@@ -21,10 +19,10 @@ async function Job(getPartition: any, getDocumentsBasedOnPartition: any) {
 }
 
 export async function setupBatchJob(
-  getPartition: any,
-  getDocumentsBasedOnPartition: any
+  getPartition: GetPartition,
+  getDocumentsBasedOnPartition: GetDocumentsBasedOnPartition
 ) {
-  logger.info({ message: "Setting up cron event handler" });
+  logger.info({ message: "Setting up cron event handler........" });
 
   cron.schedule(cronExpression, async () => {
     await Job(getPartition, getDocumentsBasedOnPartition);

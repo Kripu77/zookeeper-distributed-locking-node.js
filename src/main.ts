@@ -6,7 +6,7 @@ import {
   getPartition,
   getDocumentsBasedOnPartition,
 } from "./infrastructure";
-import { setupBatchJob } from "./useCase/initBatchJob";
+import { setupBatchJob } from "./useCase";
 
 async function main() {
   initLogging();

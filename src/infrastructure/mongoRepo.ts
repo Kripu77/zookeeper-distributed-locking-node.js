@@ -1,4 +1,5 @@
 import { logger } from "@/helpers";
+import { Record } from "@/models";
 import { MongoClient } from "mongodb";
 
 let mongoClient: MongoClient;
@@ -7,14 +8,14 @@ const connectionString = "mongodb://root:root@mongo:27017";
 const db = "sample_db";
 const collection = "sample_collection";
 
-export async function initMongo() {
+export async function initMongo(): Promise<void> {
   mongoClient = new MongoClient(connectionString);
   await mongoClient.connect();
 }
 
-export async function getTotalDocumentsCount(): Promise<any> {
+export async function getTotalDocumentsCount(): Promise<Record> {
   try {
-    const recordsCollection = mongoClient.db(db).collection<any>(collection);
+    const recordsCollection = mongoClient.db(db).collection<Record>(collection);
     return recordsCollection.countDocuments();
   } catch (err) {
     logger.error({
@@ -29,9 +30,9 @@ export async function getTotalDocumentsCount(): Promise<any> {
 export async function getDocumentsBasedOnPartition(
   startIndex: number,
   endIndex: number
-): Promise<any[]> {
+): Promise<Record[]> {
   try {
-    const recordsCollection = mongoClient.db(db).collection<any>(collection);
+    const recordsCollection = mongoClient.db(db).collection<Record>(collection);
 
     const docs = await recordsCollection
       .find()
