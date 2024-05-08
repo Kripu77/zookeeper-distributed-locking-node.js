@@ -1,3 +1,14 @@
-{
-    "recordId": "record"
-}
+[
+    {
+        "recordId": "record-1"
+    },
+    {
+        "recordId": "record-2"
+    },
+    {
+        "recordId": "record-3"
+    },
+    {
+        "recordId": "record-4"
+    }
+]

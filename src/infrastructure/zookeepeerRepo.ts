@@ -1,9 +1,9 @@
 import { logger } from "@/helpers";
-import zookeeper from "node-zookeeper-client";
+import zookeeper, { Event } from "node-zookeeper-client";
 import { getTotalDocumentsCount } from "./mongoRepo";
 
 const client = zookeeper.createClient("zookeeper:2181", {
-  sessionTimeout: 5000,
+  sessionTimeout: 9000,
   spinDelay: 1000,
   retries: 3,
 });
@@ -24,7 +24,7 @@ export function initZookeeperConnection() {
 export async function createZNode() {
   return new Promise((resolve, reject) => {
     client.once("connected", () => {
-      logger.info("Client connected to Zookeeper Server....");
+      logger.info("Client connected to Zookeeper Server.......");
 
       client.mkdirp(root, (err, _) => {
         if (err) {
@@ -98,7 +98,7 @@ export async function getChildren(client: Client, path: string) {
   return new Promise<void>((resolve, reject) => {
     client.getChildren(
       path,
-      (event: any) => {
+      (event: Event) => {
         logger.info({ message: "Received event: %s", event: event });
 
         // getChildren(client, path); -> Not necessary if the service runs on a cron job
