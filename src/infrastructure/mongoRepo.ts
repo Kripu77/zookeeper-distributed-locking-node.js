@@ -13,7 +13,7 @@ export async function initMongo(): Promise<void> {
   await mongoClient.connect();
 }
 
-export async function getTotalDocumentsCount(): Promise<Record> {
+export async function getTotalDocumentsCount(): Promise<number> {
   try {
     const recordsCollection = mongoClient.db(db).collection<Record>(collection);
     return recordsCollection.countDocuments();
