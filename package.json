@@ -23,11 +23,13 @@
   "dependencies": {
     "@types/node-zookeeper-client": "^0.2.13",
     "mongodb": "^6.5.0",
+    "node-cron": "^3.0.3",
     "node-zookeeper-client": "^1.1.3",
     "tsc-alias": "^1.8.8",
     "winston": "^3.13.0"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7"
+    "@types/node": "^20.12.7",
+    "@types/node-cron": "^3.0.11"
   }
 }
